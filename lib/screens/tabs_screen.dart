@@ -16,7 +16,7 @@ class TabScreen extends StatefulWidget {
   const TabScreen(this.favourite, {super.key});
 
   @override
-  State<StatefulWidget> createState() => _TabScreenState();
+  State<TabScreen> createState() => _TabScreenState();
 }
 
 class _TabScreenState extends State<TabScreen> {
