@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meal_app/providers/filters_provider.dart';
 
-import 'package:meal_app/providers/meals_provider.dart';
+
 
 import 'package:meal_app/screens/category_meals_screen.dart';
 import 'package:meal_app/screens/filters_screen.dart';
 import 'package:meal_app/screens/meal_detail_screen.dart';
 import 'package:meal_app/screens/tabs_screen.dart';
 
-import 'modules/meal.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
@@ -24,24 +23,7 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final meals = ref.watch(mealsProvider);
-    final activeFilters = ref.watch(filterMealsProvider);
-
-    List<Meal> availableMeal = meals.where((meal) {
-      if (activeFilters[Filters.glutenFree]! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (activeFilters[Filters.lactoseFree]! && !meal.isLactoseFree) {
-        return false;
-      }
-      if (activeFilters[Filters.vegan]! && !meal.isVegan) {
-        return false;
-      }
-      if (activeFilters[Filters.vegeterian]! && !meal.isVegetarian) {
-        return false;
-      }
-      return true;
-    }).toList();
+    final availableMeal = ref.watch(filtersProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
