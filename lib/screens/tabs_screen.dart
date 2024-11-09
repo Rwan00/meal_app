@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:meal_app/providers/navbar_provider.dart';
 
 import '../widgets/app_bar.dart';
 import '../widgets/main_drawer.dart';
@@ -7,39 +9,27 @@ import 'categories_screen.dart';
 
 import 'favourite_screen.dart';
 
-class TabScreen extends StatefulWidget {
+class TabScreen extends ConsumerWidget {
   static String routeName = "Tab Screen";
 
   const TabScreen({super.key});
 
   @override
-  State<TabScreen> createState() => _TabScreenState();
-}
-
-class _TabScreenState extends State<TabScreen> {
-  int _selectedIndex = 0;
-  List? _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List pages = [
       {'page': const CategoriesScreen(), 'title': "Meals Categories"},
       {'page': const FavouriteScreen(), 'title': "Your Favourites"}
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    final selectedIndex = ref.watch(navBarProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _pages![_selectedIndex]['title'],
+          pages[selectedIndex]['title'],
         ),
         flexibleSpace: const AppBarCustom(),
         centerTitle: true,
       ),
-      body: _pages![_selectedIndex]['page'],
+      body: pages[selectedIndex]['page'],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).canvasColor.withOpacity(0.3),
@@ -56,9 +46,8 @@ class _TabScreenState extends State<TabScreen> {
             child: GNav(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               onTabChange: (newIndex) {
-                setState(() {
-                  _selectedIndex = newIndex;
-                });
+                ref.read(navBarProvider.notifier).selectPage(newIndex);
+                
               },
               gap: 10,
               activeColor: Colors.pink.withOpacity(0.4),
@@ -80,13 +69,13 @@ class _TabScreenState extends State<TabScreen> {
               curve: Curves.bounceInOut,
               tabs: <GButton>[
                 GButton(
-                  icon: _selectedIndex == 0
+                  icon: selectedIndex == 0
                       ? Icons.fastfood_rounded
                       : Icons.fastfood_outlined,
                   text: "Categories",
                 ),
                 GButton(
-                  icon: _selectedIndex == 1
+                  icon: selectedIndex == 1
                       ? Icons.favorite
                       : Icons.favorite_border,
                   text: "Favorite",
