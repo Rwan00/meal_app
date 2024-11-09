@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-
 import '../widgets/app_bar.dart';
 import '../widgets/main_drawer.dart';
 import 'categories_screen.dart';
@@ -9,9 +8,7 @@ import 'categories_screen.dart';
 import 'favourite_screen.dart';
 
 class TabScreen extends StatefulWidget {
- 
-
-
+  static String routeName = "Tab Screen";
 
   const TabScreen({super.key});
 
@@ -21,14 +18,14 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   int _selectedIndex = 0;
-   List? _pages ;
+  List? _pages;
 
-   @override
+  @override
   void initState() {
     super.initState();
-    _pages =  [
+    _pages = [
       {'page': const CategoriesScreen(), 'title': "Meals Categories"},
-      {'page':  const FavouriteScreen(), 'title': "Your Favourites"}
+      {'page': const FavouriteScreen(), 'title': "Your Favourites"}
     ];
   }
 

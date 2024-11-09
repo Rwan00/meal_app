@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/screens/tabs_screen.dart';
 
 import '../screens/filters_screen.dart';
 
@@ -23,7 +24,7 @@ class MainDrawer extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          buildListTile(context,"Meal",Icons.restaurant_outlined,'/'),
+          buildListTile(context,"Meal",Icons.restaurant_outlined,TabScreen.routeName),
           buildListTile(context,"Filters",Icons.settings_suggest_outlined,FilterScreen.routeName),
         ],
       ),
@@ -45,7 +46,7 @@ class MainDrawer extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-      onTap:() => Navigator.of(context).pushReplacementNamed(tapHandler),
+      onTap:() => Navigator.of(context).pushNamed(tapHandler),
     );
   }
 }

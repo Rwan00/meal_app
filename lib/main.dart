@@ -1,5 +1,7 @@
+import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meal_app/providers/filters_provider.dart';
 
 import 'package:meal_app/providers/meals_provider.dart';
 
@@ -22,44 +24,25 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    Map<String, bool> _filters = {
-      'gluten': false,
-      'lactose': false,
-      'vegan': false,
-      'vegetarian': false
-    };
-
     final meals = ref.watch(mealsProvider);
-   
+    final activeFilters = ref.watch(filterMealsProvider);
 
-    List<Meal> _availableMeal = meals;
-    
+    List<Meal> availableMeal = meals.where((meal) {
+      if (activeFilters[Filters.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (activeFilters[Filters.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+      if (activeFilters[Filters.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      if (activeFilters[Filters.vegeterian]! && !meal.isVegetarian) {
+        return false;
+      }
+      return true;
+    }).toList();
 
-    
-
-    void _setFilters(Map<String, bool> filterData) {
-      setState(() {
-        _filters = filterData;
-
-        _availableMeal = meals.where((meal) {
-          if (_filters['gluten'] == true && !meal.isGlutenFree) {
-            return false;
-          }
-          if (_filters['lactose'] == true && !meal.isLactoseFree) {
-            return false;
-          }
-          if (_filters['vegan'] == true && !meal.isVegan) {
-            return false;
-          }
-          if (_filters['vegetarian'] == true && !meal.isVegetarian) {
-            return false;
-          }
-          return true;
-        }).toList();
-      });
-    }
-
-   
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -91,23 +74,23 @@ class _MyAppState extends ConsumerState<MyApp> {
             ),
       ),
       routes: {
-        '/': (context) => const TabScreen(),
+        TabScreen.routeName: (context) => const TabScreen(),
         CategoryMealScreen.routeName: (context) =>
-            CategoryMealScreen(_availableMeal),
-        MealDetailScreen.routeName: (context) =>
-            const MealDetailScreen(),
-        FilterScreen.routeName: (context) => FilterScreen(_filters, _setFilters)
+            CategoryMealScreen(availableMeal),
+        MealDetailScreen.routeName: (context) => const MealDetailScreen(),
+        FilterScreen.routeName: (context) => const FilterScreen()
       },
+      home: buildEasySplashScreen(),
     );
   }
 
-  /* EasySplashScreen buildEasySplashScreen() {
+  EasySplashScreen buildEasySplashScreen() {
     return EasySplashScreen(
       logo: Image.asset("assets/images/meals/loading.jpg"),
       logoWidth: 170,
       showLoader: true,
       loadingText: const Text("Loading.."),
-      navigator: TabScreen(_favouriteMeals),
+      navigator: const TabScreen(),
       durationInSeconds: 3,
       backgroundColor: const Color.fromRGBO(249, 234, 213, 1.0),
       title: const Text(
@@ -115,5 +98,5 @@ class _MyAppState extends ConsumerState<MyApp> {
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
-  } */
+  }
 }
