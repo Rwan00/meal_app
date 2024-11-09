@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:meal_app/modules/meal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+import '../providers/favorites_provider.dart';
 import '../widgets/meal_item.dart';
 
-class FavouriteScreen extends StatelessWidget {
-  final List<Meal> favourites;
+class FavouriteScreen extends ConsumerWidget {
+  
 
-  const FavouriteScreen(this.favourites, {super.key});
+  const FavouriteScreen( {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+     final favourites = ref.watch(favoriteMealsProvider);
 
     if(favourites.isEmpty)
       {
